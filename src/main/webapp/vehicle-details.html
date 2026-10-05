@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Details - AutoRent</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+            </div>
+            <span>AutoRent</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vehicles.html">Vehicles</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth"></div>
+    </nav>
+
+    <main class="container">
+        
+        <div id="feedbackMessage"></div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <a href="vehicles.html" class="btn btn-secondary btn-sm">
+                &larr; Back to Vehicle Fleet
+            </a>
+        </div>
+
+        <div class="details-layout" id="detailsContainer">
+            <div class="details-visual">
+                <div id="detailVehicleIcon">
+                    <!-- SVG Icon injected by JS -->
+                </div>
+                <h3 id="detailVehicleTitle" style="margin-top: 1.5rem; font-size: 1.75rem; text-align: center;">--</h3>
+                <p id="detailVehicleSubtitle" style="color: #cbd5e1; font-size: 0.95rem;">--</p>
+            </div>
+
+            <div class="details-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span id="detailTypeBadge" class="tag tag-type" style="background: var(--primary-light); color: var(--primary); font-size: 0.85rem; padding: 0.35rem 0.85rem;">--</span>
+                    <span id="detailStatusBadge" class="badge-status available">Available</span>
+                </div>
+
+                <h2 id="detailName" style="font-family: 'Space Grotesk', sans-serif; font-size: 2rem; margin-bottom: 0.5rem;">--</h2>
+                <div class="price-val" id="detailPrice" style="font-size: 2.2rem; margin-bottom: 1.5rem; color: var(--primary);">₹-- <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">/ day</span></div>
+
+                <div class="details-meta-grid">
+                    <div class="meta-box">
+                        <div class="meta-label">Vehicle ID</div>
+                        <div class="meta-value" id="detailId">--</div>
+                    </div>
+                    <div class="meta-box">
+                        <div class="meta-label">Fuel Type</div>
+                        <div class="meta-value" id="detailFuel">--</div>
+                    </div>
+                    <div class="meta-box">
+                        <div class="meta-label">Model Year</div>
+                        <div class="meta-value" id="detailModel">--</div>
+                    </div>
+                    <div class="meta-box">
+                        <div class="meta-label">Registration</div>
+                        <div class="meta-value" id="detailReg">--</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;" id="bookingActionWrapper">
+                    <a href="#" id="rentThisVehicleBtn" class="btn btn-primary btn-block btn-lg">
+                        Rent This Vehicle Now &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Java Servlet & XML Data Store</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                window.location.href = 'vehicles.html';
+                return;
+            }
+
+            fetch(`vehicle-details?id=${encodeURIComponent(id)}&format=json`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Vehicle not found');
+                    return res.json();
+                })
+                .then(vehicle => {
+                    document.getElementById('detailVehicleTitle').textContent = `${vehicle.brand} ${vehicle.name}`;
+                    document.getElementById('detailVehicleSubtitle').textContent = `Model ${vehicle.model} • ${vehicle.registrationNumber}`;
+                    document.getElementById('detailName').textContent = `${vehicle.brand} ${vehicle.name}`;
+                    document.getElementById('detailId').textContent = vehicle.id;
+                    document.getElementById('detailTypeBadge').textContent = vehicle.type;
+                    document.getElementById('detailFuel').textContent = vehicle.fuel;
+                    document.getElementById('detailModel').textContent = vehicle.model;
+                    document.getElementById('detailReg').textContent = vehicle.registrationNumber;
+                    document.getElementById('detailPrice').innerHTML = `₹${vehicle.pricePerDay} <span style="font-size: 1rem; color: var(--text-muted); font-weight: normal;">/ day</span>`;
+
+                    const statusBadge = document.getElementById('detailStatusBadge');
+                    const statusClass = vehicle.status.toLowerCase();
+                    statusBadge.className = `badge-status ${statusClass}`;
+                    statusBadge.textContent = vehicle.status;
+
+                    // Set SVG
+                    const iconContainer = document.getElementById('detailVehicleIcon');
+                    iconContainer.innerHTML = '';
+                    iconContainer.appendChild(createVehicleSvgIcon(vehicle.type));
+
+                    // Setup button
+                    const rentBtn = document.getElementById('rentThisVehicleBtn');
+                    if (vehicle.status === 'Available') {
+                        rentBtn.href = `booking.html?vehicleId=${encodeURIComponent(vehicle.id)}`;
+                    } else {
+                        rentBtn.className = 'btn btn-secondary btn-block btn-lg';
+                        rentBtn.textContent = `Vehicle Currently ${vehicle.status}`;
+                        rentBtn.removeAttribute('href');
+                        rentBtn.style.cursor = 'not-allowed';
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('detailsContainer').innerHTML = 
+                        `<div class="alert alert-danger" style="grid-column: 1/-1;">Vehicle record not found. <a href="vehicles.html">Browse fleet</a></div>`;
+                });
+        });
+    </script>
+</body>
+</html>

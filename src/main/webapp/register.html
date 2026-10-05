@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration - Vehicle Rental System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+            </div>
+            <span>AutoRent</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vehicles.html">Vehicles</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth">
+            <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
+        </div>
+    </nav>
+
+    <main class="container" style="max-width: 500px; margin-top: 2rem;">
+        
+        <div id="feedbackMessage"></div>
+
+        <div class="card">
+            <h2 class="card-title" style="text-align: center;">Customer Registration</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                Create an account to book and rent vehicles online
+            </p>
+
+            <form action="register" method="POST" id="registerForm">
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-control" required placeholder="e.g. John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" required placeholder="Choose a unique username" autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required placeholder="Create a password" autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required placeholder="Confirm your password" autocomplete="new-password">
+                    <div id="passMatchError" style="color: var(--danger); font-size: 0.8rem; margin-top: 0.35rem; display: none;">
+                        Passwords do not match.
+                    </div>
+                </div>
+
+                <button type="submit" id="registerBtn" class="btn btn-primary btn-block btn-lg" style="margin-top: 1.5rem;">
+                    Create Account
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.9rem; color: var(--text-secondary);">
+                Already have an account? <a href="login.html" style="color: var(--primary); font-weight: 600;">Login here</a>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Java Servlet & XML Data Store</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const p1 = document.getElementById('password').value;
+            const p2 = document.getElementById('confirmPassword').value;
+            const err = document.getElementById('passMatchError');
+            if (p1 !== p2) {
+                e.preventDefault();
+                err.style.display = 'block';
+            } else {
+                err.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - AutoRent</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+            </div>
+            <span>AutoRent</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vehicles.html">Vehicles</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="my-bookings.html" class="active">My Bookings</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth"></div>
+    </nav>
+
+    <main class="container">
+        
+        <div id="feedbackMessage"></div>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">My Rental Bookings</h1>
+                <p class="page-subtitle">Track your vehicle reservations, rental history, and cancellation status</p>
+            </div>
+            <div>
+                <a href="vehicles.html" class="btn btn-primary">Book Another Vehicle</a>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="custom-table" id="bookingsTable">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Vehicle</th>
+                        <th>Pickup Date</th>
+                        <th>Return Date</th>
+                        <th>Days</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem;">Loading your bookings...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Java Servlet & XML Data Store</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        function onAuthReady(user) {
+            if (!user) {
+                window.location.href = 'login.html?error=Please+login+to+view+your+bookings';
+                return;
+            }
+
+            fetch('my-bookings?format=json')
+                .then(res => res.json())
+                .then(bookings => {
+                    const tbody = document.getElementById('bookingsTableBody');
+                    tbody.innerHTML = '';
+
+                    if (!bookings || bookings.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-secondary);">You have no bookings yet. <a href="vehicles.html">Rent a vehicle now</a>.</td></tr>`;
+                        return;
+                    }
+
+                    bookings.forEach(b => {
+                        const tr = document.createElement('tr');
+                        const statusClass = b.bookingStatus ? b.bookingStatus.toLowerCase() : 'confirmed';
+
+                        let actionHtml = '-';
+                        if (b.bookingStatus === 'Confirmed' || b.bookingStatus === 'Pending') {
+                            actionHtml = `<button class="btn btn-danger btn-sm" onclick="confirmCancelBooking('${b.bookingId}')">Cancel</button>`;
+                        }
+
+                        tr.innerHTML = `
+                            <td><strong>#${b.bookingId}</strong></td>
+                            <td>${b.vehicleName}</td>
+                            <td>${b.pickupDate}</td>
+                            <td>${b.returnDate}</td>
+                            <td>${b.rentalDays} day(s)</td>
+                            <td><strong>₹${b.totalAmount}</strong></td>
+                            <td><span class="badge-status ${statusClass}">${b.bookingStatus}</span></td>
+                            <td>${actionHtml}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(err => {
+                    console.error('Failed to load bookings:', err);
+                    document.getElementById('bookingsTableBody').innerHTML = 
+                        `<tr><td colspan="8" class="alert alert-danger" style="text-align:center;">Failed to retrieve bookings from XML data store.</td></tr>`;
+                });
+        }
+    </script>
+</body>
+</html>

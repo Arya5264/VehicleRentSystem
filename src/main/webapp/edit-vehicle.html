@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Vehicle - AutoRent Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="admin-dashboard.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            </div>
+            <span>AutoRent Admin</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="admin-dashboard.html">Dashboard</a></li>
+            <li><a href="manage-vehicles.html" class="active">Manage Vehicles</a></li>
+            <li><a href="add-vehicle.html">Add Vehicle</a></li>
+            <li><a href="manage-bookings.html">Bookings</a></li>
+            <li><a href="customers.html">Customers</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth"></div>
+    </nav>
+
+    <main class="container" style="max-width: 650px;">
+        
+        <div id="feedbackMessage"></div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <a href="manage-vehicles.html" class="btn btn-secondary btn-sm">&larr; Back to Inventory</a>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Modify Vehicle Details</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                Update vehicle specifications and save modifications back to vehicles.xml
+            </p>
+
+            <form action="admin/edit-vehicle" method="POST" id="editVehicleForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id" class="form-label">Vehicle ID</label>
+                        <input type="text" id="id" name="id" class="form-control" readonly style="background: var(--bg-card-subtle);">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name" class="form-label">Model Name</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brand" class="form-label">Brand / Manufacturer</label>
+                        <input type="text" id="brand" name="brand" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model" class="form-label">Manufacturing Year</label>
+                        <input type="text" id="model" name="model" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="type" class="form-label">Category</label>
+                        <select id="type" name="type" class="form-control" required>
+                            <option value="Hatchback">Hatchback</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="MUV">MUV</option>
+                            <option value="Bike">Bike</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fuel" class="form-label">Fuel Type</label>
+                        <select id="fuel" name="fuel" class="form-control" required>
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                            <option value="CNG">CNG</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pricePerDay" class="form-label">Price Per Day (₹)</label>
+                        <input type="number" id="pricePerDay" name="pricePerDay" class="form-control" required min="100" step="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registrationNumber" class="form-label">Registration Number</label>
+                        <input type="text" id="registrationNumber" name="registrationNumber" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Fleet Status</label>
+                    <select id="status" name="status" class="form-control" required>
+                        <option value="Available">Available</option>
+                        <option value="Rented">Rented</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a href="manage-vehicles.html" class="btn btn-secondary" style="flex: 1;">Cancel</a>
+                    <button type="submit" id="updateVehicleBtn" class="btn btn-primary btn-lg" style="flex: 2;">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Admin Module</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        function onAuthReady(user) {
+            if (!user) {
+                window.location.href = 'login.html?error=Please+login+as+admin';
+                return;
+            }
+            if (user.role !== 'ADMIN') {
+                window.location.href = 'access-denied.html';
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                window.location.href = 'manage-vehicles.html';
+                return;
+            }
+
+            // Fetch vehicle details for editing
+            fetch(`admin/edit-vehicle?id=${encodeURIComponent(id)}&format=json`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Vehicle not found');
+                    return res.json();
+                })
+                .then(v => {
+                    document.getElementById('id').value = v.id;
+                    document.getElementById('name').value = v.name;
+                    document.getElementById('brand').value = v.brand;
+                    document.getElementById('model').value = v.model;
+                    document.getElementById('type').value = v.type;
+                    document.getElementById('fuel').value = v.fuel;
+                    document.getElementById('pricePerDay').value = v.pricePerDay;
+                    document.getElementById('registrationNumber').value = v.registrationNumber;
+                    document.getElementById('status').value = v.status;
+                })
+                .catch(err => {
+                    console.error('Error fetching vehicle for edit:', err);
+                    alert('Failed to load vehicle data.');
+                    window.location.href = 'manage-vehicles.html';
+                });
+        }
+    </script>
+</body>
+</html>

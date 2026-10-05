@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookings>
+    <booking>
+        <bookingId>BK001</bookingId>
+        <userId>U002</userId>
+        <customerName>Customer</customerName>
+        <vehicleId>V001</vehicleId>
+        <vehicleName>Swift</vehicleName>
+        <pickupDate>2026-09-20</pickupDate>
+        <returnDate>2026-09-22</returnDate>
+        <rentalDays>2</rentalDays>
+        <pricePerDay>1500</pricePerDay>
+        <totalAmount>3000</totalAmount>
+        <bookingStatus>Confirmed</bookingStatus>
+    </booking>
+</bookings>

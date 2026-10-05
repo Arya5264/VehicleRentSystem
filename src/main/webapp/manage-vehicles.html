@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Vehicles - Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="admin-dashboard.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            </div>
+            <span>AutoRent Admin</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="admin-dashboard.html">Dashboard</a></li>
+            <li><a href="manage-vehicles.html" class="active">Manage Vehicles</a></li>
+            <li><a href="add-vehicle.html">Add Vehicle</a></li>
+            <li><a href="manage-bookings.html">Bookings</a></li>
+            <li><a href="customers.html">Customers</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth"></div>
+    </nav>
+
+    <main class="container">
+        
+        <div id="feedbackMessage"></div>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Vehicle Inventory Management</h1>
+                <p class="page-subtitle">View, edit, add, delete, and update status of fleet vehicles stored in vehicles.xml</p>
+            </div>
+            <div>
+                <a href="add-vehicle.html" class="btn btn-primary" id="addNewVehicleBtn">
+                    + Add New Vehicle
+                </a>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="custom-table" id="adminVehiclesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Brand</th>
+                        <th>Type</th>
+                        <th>Fuel</th>
+                        <th>Price/Day</th>
+                        <th>Registration</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="adminVehiclesTableBody">
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem;">Loading vehicle fleet...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Admin Module</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        function onAuthReady(user) {
+            if (!user) {
+                window.location.href = 'login.html?error=Please+login+as+admin';
+                return;
+            }
+            if (user.role !== 'ADMIN') {
+                window.location.href = 'access-denied.html';
+                return;
+            }
+
+            loadAdminVehicles();
+        }
+
+        function loadAdminVehicles() {
+            fetch('vehicles?format=json')
+                .then(res => res.json())
+                .then(vehicles => {
+                    const tbody = document.getElementById('adminVehiclesTableBody');
+                    tbody.innerHTML = '';
+
+                    if (!vehicles || vehicles.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 2rem;">No vehicles found.</td></tr>`;
+                        return;
+                    }
+
+                    vehicles.forEach(v => {
+                        const tr = document.createElement('tr');
+                        const statusClass = v.status ? v.status.toLowerCase() : 'available';
+
+                        tr.innerHTML = `
+                            <td><strong>${v.id}</strong></td>
+                            <td>${v.name}</td>
+                            <td>${v.brand}</td>
+                            <td><span class="tag tag-type" style="background:#f1f5f9; color:var(--text-primary); border:1px solid #cbd5e1;">${v.type}</span></td>
+                            <td>${v.fuel}</td>
+                            <td><strong>₹${v.pricePerDay}</strong></td>
+                            <td><code>${v.registrationNumber}</code></td>
+                            <td><span class="badge-status ${statusClass}">${v.status}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="edit-vehicle.html?id=${encodeURIComponent(v.id)}" class="btn btn-secondary btn-sm" title="Edit Vehicle">
+                                        Edit
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDeleteVehicle('${v.id}', '${v.brand} ${v.name}')" title="Delete Vehicle">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(err => {
+                    console.error('Failed to load vehicles for admin:', err);
+                    document.getElementById('adminVehiclesTableBody').innerHTML = 
+                        `<tr><td colspan="9" class="alert alert-danger" style="text-align:center;">Failed to read vehicles.xml.</td></tr>`;
+                });
+        }
+    </script>
+</body>
+</html>

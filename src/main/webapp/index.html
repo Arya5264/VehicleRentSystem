@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Rental Management System</title>
+    <meta name="description" content="College Web Technology Lab Project - Vehicle Rental Management System with Servlets, XML, XPath and DOM">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand" id="brandLogo">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+            </div>
+            <span>AutoRent</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="vehicles.html" id="browseVehiclesNav">Vehicles</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth">
+            <!-- Dynamically populated by script.js -->
+            <a href="login.html" class="btn btn-secondary btn-sm" id="navLoginBtn">Login</a>
+            <a href="register.html" class="btn btn-primary btn-sm" id="navRegisterBtn">Register</a>
+        </div>
+    </nav>
+
+    <!-- Feedback / Alert Container -->
+    <div class="container" style="padding-bottom: 0;">
+        <div id="feedbackMessage"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Web Technology Mini Project 2026</div>
+            <h1 class="hero-title">Rent Your Vehicle <span>Easily, Quickly & Securely</span></h1>
+            <p class="hero-description">
+                Experience hassle-free mobility. Choose from an extensive fleet of premium hatchbacks, SUVs, sedans, and motorbikes with real-time availability and transparent pricing.
+            </p>
+            <div class="hero-actions">
+                <a href="vehicles.html" class="btn btn-primary btn-lg" id="heroBrowseBtn">Browse Vehicles</a>
+                <a href="login.html" class="btn btn-secondary btn-lg" id="heroLoginBtn">Customer Login</a>
+                <a href="register.html" class="btn btn-outline btn-lg" id="heroRegisterBtn" style="color: #fff; border-color: rgba(255,255,255,0.4);">Register</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="container">
+
+        <!-- Why Choose Us -->
+        <div class="section-header">
+            <h2>Why Choose AutoRent?</h2>
+            <p>Built with enterprise standards using Java Jakarta Servlets, XML and XPath</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                </div>
+                <h3>Verified Fleet</h3>
+                <p>Every vehicle is rigorously maintained and inspected for your utmost safety, comfort, and peace of mind.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                </div>
+                <h3>Dynamic Price Calculation</h3>
+                <p>Transparent daily tariffs with instant JavaScript DOM calculations and zero hidden charges.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                </div>
+                <h3>Instant Booking</h3>
+                <p>Select pickup and return dates and reserve your dream car or bike in less than 60 seconds.</p>
+            </div>
+        </div>
+
+        <!-- 3-Step Process -->
+        <section class="process-section">
+            <div class="section-header">
+                <h2>Simple 3-Step Rental Process</h2>
+                <p>Rent a car or bike with effortless simplicity</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>Choose Your Ride</h4>
+                    <p>Browse our verified catalogue and filter by vehicle category, fuel type, or daily price.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>Select Rental Dates</h4>
+                    <p>Pick your preferred pickup and return dates with automatic real-time rate computation.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>Hit the Road</h4>
+                    <p>Receive your confirmed booking reference and pick up your vehicle from our hub.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p><strong>Vehicle Rental Management System</strong> &bull; College Web Technology Lab Project</p>
+            <div class="footer-badges">
+                <span class="tech-badge">Java 17</span>
+                <span class="tech-badge">Jakarta Servlet 6.0</span>
+                <span class="tech-badge">XML Data Store</span>
+                <span class="tech-badge">XPath Queries</span>
+                <span class="tech-badge">DOM Scripting</span>
+                <span class="tech-badge">Apache Tomcat 10.1</span>
+                <span class="tech-badge">Selenium WebDriver</span>
+            </div>
+            <p style="font-size: 0.8rem; color: #64748b;">Demo Accounts: Admin (admin / admin123) &bull; Customer (customer / customer123)</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

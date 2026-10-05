@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Fleet - AutoRent</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+            </div>
+            <span>AutoRent</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vehicles.html" class="active">Vehicles</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth">
+            <!-- Filled dynamically by script.js -->
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <div id="feedbackMessage"></div>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Explore Our Vehicle Fleet</h1>
+                <p class="page-subtitle">Filter by category, fuel type, daily budget, or search directly</p>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar (DOM-Driven) -->
+        <div class="catalogue-toolbar">
+            <div class="search-input-wrapper">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search by name, brand, or model (e.g. Creta, Swift, Royal Enfield)...">
+            </div>
+
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label for="typeFilter">Category:</label>
+                    <select id="typeFilter" class="filter-select">
+                        <option value="All">All Categories</option>
+                        <option value="Hatchback">Hatchback</option>
+                        <option value="Sedan">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="MUV">MUV</option>
+                        <option value="Bike">Bike</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="fuelFilter">Fuel:</label>
+                    <select id="fuelFilter" class="filter-select">
+                        <option value="All">All Fuels</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="All">All Statuses</option>
+                        <option value="Available">Available Only</option>
+                        <option value="Rented">Rented</option>
+                    </select>
+                </div>
+
+                <div class="price-range-wrapper">
+                    <label for="priceRange" style="font-size: 0.85rem; font-weight: 600;">Max Price:</label>
+                    <input type="range" id="priceRange" min="500" max="5000" step="100" value="5000">
+                    <span id="priceDisplay" class="price-badge">₹5000/day</span>
+                </div>
+
+                <button type="button" id="resetFiltersBtn" class="btn btn-secondary btn-sm" style="white-space: nowrap;">
+                    Reset Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Dynamic Grid of Vehicles (rendered by script.js) -->
+        <div class="vehicles-grid" id="vehiclesGrid">
+            <!-- Vehicle Cards injected dynamically by loadVehiclesCatalogue() -->
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Java Servlet & XML Data Store</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadVehiclesCatalogue();
+        });
+    </script>
+</body>
+</html>

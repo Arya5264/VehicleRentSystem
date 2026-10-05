@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - AutoRent</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+            </div>
+            <span>AutoRent</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vehicles.html">Browse Vehicles</a></li>
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="my-bookings.html">My Bookings</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth">
+            <!-- Filled by script.js -->
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <div id="feedbackMessage"></div>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" id="welcomeMessage">Welcome, Customer</h1>
+                <p class="page-subtitle">Here is a summary of your rental activities and fleet availability</p>
+            </div>
+            <div class="page-actions">
+                <a href="vehicles.html" class="btn btn-primary" id="btnRentNew">
+                    <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    Rent a Vehicle
+                </a>
+            </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon primary">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statAvailableVehicles">--</span>
+                    <span class="stat-label">Available Vehicles</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon success">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statActiveBookings">--</span>
+                    <span class="stat-label">My Active Bookings</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon secondary">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statCompletedRentals">--</span>
+                    <span class="stat-label">Completed Rentals</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links Grid -->
+        <h3 style="margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">Quick Actions</h3>
+        <div class="features-grid" style="margin-top: 0;">
+            <div class="feature-card" style="cursor: pointer;" onclick="window.location.href='vehicles.html'">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </div>
+                <h3>Explore Available Vehicles</h3>
+                <p>Browse through hatchbacks, sedans, SUVs, and bikes. Filter by fuel or price.</p>
+            </div>
+
+            <div class="feature-card" style="cursor: pointer;" onclick="window.location.href='my-bookings.html'">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                </div>
+                <h3>My Bookings & History</h3>
+                <p>View current reservations, track pickup dates, or cancel eligible bookings.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Java Servlet & XML Data Store</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        function onAuthReady(user) {
+            if (!user) {
+                window.location.href = 'login.html?error=Please+login+to+access+dashboard';
+                return;
+            }
+            if (user.role === 'ADMIN') {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
+            document.getElementById('welcomeMessage').textContent = `Welcome, ${user.name || user.username}!`;
+
+            // Load customer stats
+            fetch('api/customer-stats')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('statAvailableVehicles').textContent = data.availableVehicles ?? 0;
+                    document.getElementById('statActiveBookings').textContent = data.activeBookings ?? 0;
+                    document.getElementById('statCompletedRentals').textContent = data.completedBookings ?? 0;
+                })
+                .catch(err => console.error('Failed to load stats:', err));
+        }
+    </script>
+</body>
+</html>

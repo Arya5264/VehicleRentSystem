@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Vehicle - AutoRent</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+            </div>
+            <span>AutoRent</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="vehicles.html">Vehicles</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="my-bookings.html">My Bookings</a></li>
+        </ul>
+        <div class="nav-auth" id="navAuth"></div>
+    </nav>
+
+    <main class="container">
+        
+        <div id="feedbackMessage"></div>
+
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Reserve Your Vehicle</h1>
+                <p class="page-subtitle">Select your rental dates and verify the calculated rate before confirming</p>
+            </div>
+        </div>
+
+        <div class="booking-grid">
+            
+            <!-- Booking Form -->
+            <div class="card">
+                <h3 class="card-title">Rental Details</h3>
+                
+                <form action="book" method="POST" id="bookingForm">
+                    <input type="hidden" id="vehicleId" name="vehicleId" value="">
+
+                    <div class="form-group">
+                        <label class="form-label">Customer Name</label>
+                        <input type="text" id="customerName" class="form-control" readonly value="Loading..." style="background: var(--bg-card-subtle);">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Selected Vehicle</label>
+                        <input type="text" id="vehicleDisplayName" class="form-control" readonly value="Loading vehicle..." style="background: var(--bg-card-subtle);">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pickupDate" class="form-label">Pickup Date</label>
+                            <input type="date" id="pickupDate" name="pickupDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnDate" class="form-label">Return Date</label>
+                            <input type="date" id="returnDate" name="returnDate" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div id="dateErrorMsg" class="alert alert-danger" style="display: none; padding: 0.5rem 0.85rem; font-size: 0.85rem;"></div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <a href="vehicles.html" class="btn btn-secondary" style="flex: 1;">Cancel</a>
+                        <button type="submit" id="confirmBookingBtn" class="btn btn-primary btn-lg" style="flex: 2;">
+                            Confirm Booking
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Dynamic Price Calculation Summary Card -->
+            <div class="summary-card">
+                <h3>Booking Calculation</h3>
+
+                <div class="summary-row">
+                    <span>Vehicle</span>
+                    <strong id="summaryVehicleName">--</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Daily Rate</span>
+                    <strong id="summaryDailyRate">₹0 / day</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Rental Duration</span>
+                    <strong id="calcRentalDays">1 day</strong>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Estimated Total</span>
+                    <span class="total-amount" id="calcTotalAmount">₹0</span>
+                </div>
+
+                <p style="font-size: 0.8rem; color: #cbd5e1; margin-top: 1.5rem; text-align: center;">
+                    * Final rental calculation is verified securely on the Java backend via Servlet before generating the booking.
+                </p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Vehicle Rental Management System &bull; Java Servlet & XML Data Store</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        let vehicleDailyRate = 0;
+
+        function onAuthReady(user) {
+            if (!user) {
+                const params = new URLSearchParams(window.location.search);
+                const vId = params.get('vehicleId') || '';
+                window.location.href = `login.html?error=Please+login+to+complete+your+booking&redirect=booking.html?vehicleId=${vId}`;
+                return;
+            }
+
+            document.getElementById('customerName').value = user.name || user.username;
+
+            const params = new URLSearchParams(window.location.search);
+            const vehicleId = params.get('vehicleId');
+
+            if (!vehicleId) {
+                window.location.href = 'vehicles.html';
+                return;
+            }
+
+            document.getElementById('vehicleId').value = vehicleId;
+
+            // Fetch vehicle details
+            fetch(`vehicle-details?id=${encodeURIComponent(vehicleId)}&format=json`)
+                .then(res => res.json())
+                .then(v => {
+                    vehicleDailyRate = v.pricePerDay;
+                    document.getElementById('vehicleDisplayName').value = `${v.brand} ${v.name} (${v.type}) - ${v.registrationNumber}`;
+                    document.getElementById('summaryVehicleName').textContent = `${v.brand} ${v.name}`;
+                    document.getElementById('summaryDailyRate').textContent = `₹${v.pricePerDay} / day`;
+
+                    // Initialize dynamic calculator
+                    initBookingCalculator(vehicleDailyRate);
+                })
+                .catch(err => {
+                    console.error('Failed to load vehicle info:', err);
+                });
+        }
+    </script>
+</body>
+</html>
