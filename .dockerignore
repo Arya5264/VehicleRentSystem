@@ -1,0 +1,25 @@
+# Build output
+target/
+target/*
+
+# Version control
+.git/
+.gitignore
+
+# IDE metadata
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+.vscode/
+.antigravity/
+
+# Temporary and log files
+*.log
+*.tmp
+*.bak
+*~
+
+# Vercel CLI cache
+.vercel/

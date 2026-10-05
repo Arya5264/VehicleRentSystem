@@ -18,6 +18,7 @@ A complete, enterprise-grade Web Technology Lab mini-project developed with **Ja
 11. [Demo Credentials](#demo-credentials)
 12. [Automated Testing with Selenium WebDriver](#automated-testing-with-selenium-webdriver)
 13. [Architecture and Data Design](#architecture-and-data-design)
+14. [Vercel Container Deployment (Java 17 + Tomcat 10.1)](#14-vercel-container-deployment-java-17--tomcat-101)
 
 ---
 
@@ -461,4 +462,88 @@ mvn test
   ```
 
 ---
+
+## 14. Vercel Container Deployment (Java 17 + Tomcat 10.1)
+
+The application is fully prepared for zero-code-change cloud deployment to **Vercel** using Vercel's native **OCI Container deployment** approach (`Dockerfile.vercel`). The underlying architecture (**Java 17**, **Maven**, **Jakarta Servlets**, **Apache Tomcat 10.1**, and **XML data storage**) remains 100% intact.
+
+### 14.1 Architecture & Container Pipeline
+```
+[Git / Vercel CLI]
+       │
+       ▼
+[Stage 1: Maven Builder] (maven:3.9.6-eclipse-temurin-17)
+  - Copies pom.xml, src/, data/
+  - Runs: mvn clean package -DskipTests
+  - Produces: target/VehicleRentalSystem.war
+       │
+       ▼
+[Stage 2: Tomcat Runtime] (tomcat:10.1-jdk17-temurin)
+  - Deploys VehicleRentalSystem.war to /usr/local/tomcat/webapps/
+  - Sets up webapps/ROOT/index.html to forward '/' to '/VehicleRentalSystem/'
+  - entrypoint.sh dynamically binds Tomcat to Vercel's $PORT environment variable
+  - Exposes port $PORT (default 80)
+```
+
+### 14.2 Deployment Configuration Files
+- **`Dockerfile.vercel`**: Multi-stage build definition recognized automatically by Vercel.
+- **`Dockerfile`**: Identical container definition for standard local Docker testing.
+- **`entrypoint.sh`**: Dynamic startup script that reads `$PORT`, updates `server.xml`, and starts Tomcat.
+- **`.dockerignore`**: Excludes build artifacts (`target/`), IDE files (`.settings/`, `.project`, `.classpath`), and git caches from image layers.
+
+### 14.3 How to Deploy to Vercel
+
+#### Method A: Deploy via GitHub (Recommended)
+1. Push your repository commits to GitHub:
+   ```bash
+   git push origin main
+   ```
+2. Go to your [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New..."** ➔ **"Project"**.
+3. Import your GitHub repository (`Arya5264/VehicleRentSystem`).
+4. Vercel automatically detects `Dockerfile.vercel` and switches to the container build pipeline.
+5. Click **"Deploy"**. Vercel will build the Maven WAR inside the container, configure Tomcat, and deploy it to a production URL.
+
+#### Method B: Deploy via Vercel CLI
+1. Open PowerShell or Terminal in the project root:
+   ```powershell
+   # Deploy a preview deployment
+   npx vercel
+
+   # Deploy directly to production
+   npx vercel --prod
+   ```
+2. Follow the interactive prompts:
+   - *Set up and deploy?* `Y`
+   - *Which scope?* Select your Vercel account.
+   - *Link to existing project?* `N` (or select existing).
+   - *Project name?* `vehiclerental-system` (or your preferred name).
+
+### 14.4 Local Testing with Docker Before Deployment
+You can build and test the exact Vercel container locally using standard Docker:
+
+```bash
+# 1. Build the Vercel container image
+docker build -f Dockerfile.vercel -t vehiclerental-app .
+
+# 2. Run the container locally (mapping host port 8080 to container port 80)
+docker run --rm -p 8080:80 -e PORT=80 vehiclerental-app
+
+# 3. Access in your browser:
+# http://localhost:8080/VehicleRentalSystem/
+# or http://localhost:8080/ (auto-redirects to /VehicleRentalSystem/)
+```
+
+### 14.5 Important Considerations: XML Persistence on Vercel
+Because Vercel Containers run on top of serverless infrastructure (OCI images on Vercel Functions):
+- **Stateless Filesystem**: Any new bookings or vehicle updates written to XML files are stored in the active container instance's memory/disk.
+- **Container Recycling**: When the container scales down to zero after idle periods or receives a new deployment, the filesystem resets back to the initial XML files packaged during the container build (`data/vehicles.xml`, `data/users.xml`, `data/bookings.xml`).
+- **Initial Data Availability**: All baseline demo data (Admin `admin`/`admin123`, Customer `customer`/`customer123`, and all 8 fleet vehicles) is permanently bundled inside the image and will always be available immediately upon container boot.
+
+### 14.6 Production URL Format
+Once deployed, Vercel assigns a domain in the format:
+- **Application URL**: `https://<your-project-name>.vercel.app/VehicleRentalSystem/`
+- **Root URL**: `https://<your-project-name>.vercel.app/` (automatically redirects to `/VehicleRentalSystem/`)
+
+---
 *Developed for College Web Technology Lab Demonstration.*
+
