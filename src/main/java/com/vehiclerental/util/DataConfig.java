@@ -74,7 +74,9 @@ public class DataConfig {
         if (catalinaBase != null && !catalinaBase.trim().isEmpty()) {
             String[] tomcatPaths = {
                     catalinaBase + "/wtpwebapps/VehicleRentalSystem/WEB-INF/data",
-                    catalinaBase + "/webapps/VehicleRentalSystem/WEB-INF/data"
+                    catalinaBase + "/webapps/VehicleRentalSystem/WEB-INF/data",
+                    catalinaBase + "/webapps/ROOT/WEB-INF/data",
+                    catalinaBase + "/data"
             };
             for (String tPath : tomcatPaths) {
                 File tFile = new File(tPath, fileName);

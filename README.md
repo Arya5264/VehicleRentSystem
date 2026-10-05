@@ -479,8 +479,8 @@ The application is fully prepared for zero-code-change cloud deployment to **Ver
        │
        ▼
 [Stage 2: Tomcat Runtime] (tomcat:10.1-jdk17-temurin)
-  - Deploys VehicleRentalSystem.war to /usr/local/tomcat/webapps/
-  - Sets up webapps/ROOT/index.html to forward '/' to '/VehicleRentalSystem/'
+  - Pre-unpacks application to /usr/local/tomcat/webapps/VehicleRentalSystem/
+  - Also pre-unpacks to /usr/local/tomcat/webapps/ROOT/ for dual-route support
   - entrypoint.sh dynamically binds Tomcat to Vercel's $PORT environment variable
   - Exposes port $PORT (default 80)
 ```
